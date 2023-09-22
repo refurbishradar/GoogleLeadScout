@@ -19,4 +19,10 @@ Caching ; Using requests lib
 Parallel Processing ; Using concurrent.futures lib
 Headless Frontend Window ; Using selenium lib
 
+## Dependencies
+Do 
+`pip install -r requirements.txt`
+
+To install required libraries
+
 
