@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import concurrent.futures
 
 # Define the city and niche to scrape
 city = "San Francisco"
@@ -26,7 +27,7 @@ for business in soup.findAll("div", class_="cX8d1e"):
         elif "tiktok" in href:
             social_media_links.append({"platform": "TikTok", "url": href})
 
-    
+
     businesses.append({
         "name": name,
         "address": address,
@@ -35,9 +36,40 @@ for business in soup.findAll("div", class_="cX8d1e"):
         "social_media_links": social_media_links
     })
 
+# Scrape additional data, such as reviews, website, operating since, and employee number
+def scrape_additional_data(business):
+    website = None
+    for link in business["social_media_links"]:
+        if "website" in link["platform"]:
+            website = link["url"]
+            break
+
+    
+    reviews = []
+    if website:
+        
+        pass
+
+    
+    operating_since = None
+    
+
+    
+    employee_number = None
+    
+
+    
+    business["website"] = website
+    business["reviews"] = reviews
+    business["operating_since"] = operating_since
+    business["employee_number"] = employee_number
+
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    results = executor.map(scrape_additional_data, businesses)
+
 import csv
 with open("businesses.csv", "w", newline="") as f:
     writer = csv.writer(f)
-    writer.writerow(["name", "address", "phone_number", "email_address", "social_media_links"])
+    writer.writerow(["name", "address", "phone_number", "email_address", "social_media_links", "website", "reviews", "operating_since", "employee_number"])
     for business in businesses:
-        writer.writerow([business["name"], business["address"], business["phone_number"], business["email_address"], ",".join([link["url"] for link in business["social_media_links"]])])
+        writer.writerow([business["name"], business["address"], business["phone_number"], business["email_address"], ",".join([link["url"] for link in business["social_media_links"]]), business["website"], ",".join(business["reviews"]), business["operating_since"], business["employee_number"]])
